@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>Azure AI Chat Demo</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 40px auto; }
+    textarea { width: 100%; height: 80px; margin-bottom: 10px; }
+    button { padding: 8px 16px; }
+    #response { margin-top: 20px; white-space: pre-wrap; background: #f0f0f0; padding: 10px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h2>与 Azure GPT 对话</h2>
+  <textarea id="userInput" placeholder="请输入你的问题..."></textarea><br/>
+  <button onclick="sendMessage()">发送</button>
+
+  <div id="response"></div>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("userInput").value;
+      const responseDiv = document.getElementById("response");
+      responseDiv.innerText = "正在思考中...";
+      const res = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: input })
+      });
+      const data = await res.json();
+      responseDiv.innerText = data.response || ("❌ 出错了: " + data.error);
+    }
+  </script>
+</body>
+</html>
